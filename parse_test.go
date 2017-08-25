@@ -129,6 +129,9 @@ var invalidAddresses = []string{
 	"\"\\\x00\" <escaped-null@example.net>",
 	"asd\x06asd <null@example.net>",
 
+	// Random data after >
+	"foo <foo@example.com> huh",
+
 	// Various junk data collected.
 	`roby.bell@comcast.netVortex666!!`,
 	`martimbault@.qc.aira.com`,
