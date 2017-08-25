@@ -163,7 +163,7 @@ func toUTF8(charset string, input io.Reader) (_ io.Reader, returnErr error) {
 	r := iconv.NewReader(conv, input, 0)
 	b, err := ioutil.ReadAll(r)
 	if err != nil {
-		// errno 84 from syscall. Unfortunatly we can't check the errno :-/
+		// errno 84 from syscall. Unfortunately we can't check the errno :-/
 		if err.Error() == "invalid or incomplete multibyte or wide character" {
 			return nil, ErrInvalidEncoding
 		}
