@@ -1,0 +1,18 @@
+#!/bin/sh
+
+usage="Run fuzzing tests"
+
+# Setup
+#######
+set -euC
+root="$(cd "$(dirname "$0")/.." && pwd | sed s,/Teamwork/,/teamwork/,)"
+. "$root/bin/start"
+
+# Run action
+############
+
+#-o string output file
+#go-fuzz-build "$pkgname"
+
+#go test -race $test_tags $(go list ./... | grep -v /vendor/)
+#go-fuzz -bin=$name-fuzz.zip -workdir=fuzz-workdir

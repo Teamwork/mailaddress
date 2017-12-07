@@ -1,2 +1,5 @@
 coverage.txt
 vendor
+/mailaddress-fuzz.zip
+/fuzz-workdir/
+

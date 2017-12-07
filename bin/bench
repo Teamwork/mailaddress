@@ -1,0 +1,17 @@
+#!/bin/sh
+
+usage="Run benchmarks"
+
+# Setup
+#######
+set -euC
+root="$(cd "$(dirname "$0")/.." && pwd | sed s,/Teamwork/,/teamwork/,)"
+. "$root/bin/start"
+
+# Run action
+############
+
+go test -bench .
+
+#go-fuzz-build github.com/teamwork/mailaddress
+#go-fuzz -bin=mailaddress-fuzz.zip -workdir=workdir
