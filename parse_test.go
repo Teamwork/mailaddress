@@ -21,6 +21,7 @@ var validAddresses = map[string]Address{
 	"dashed-dash@ex-ample.com":             {Address: "dashed-dash@ex-ample.com"},
 	"Name <dashed-dash@ex-ample.com>":      {Name: "Name", Address: "dashed-dash@ex-ample.com"},
 	"example@example.verylongtld":          {Address: "example@example.verylongtld"},
+	`Po "Wiśnasd" <asd@asd-def-24h.zxc>`:   {Name: `Po Wiśnasd`, Address: "asd@asd-def-24h.zxc"},
 
 	// TODO: Quoting the local part isn't supported (yet).
 	//`"quoted"@example.com`:                     {Address: `"quoted"@example.com`},

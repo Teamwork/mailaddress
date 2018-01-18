@@ -31,7 +31,7 @@ func (a Address) NameEncoded() string {
 	}
 
 	name := a.Name
-	if strings.IndexAny(name, `",;@<>()`) > -1 {
+	if strings.ContainsAny(name, `",;@<>()`) {
 		name = fmt.Sprintf(`"%s"`, strings.Replace(name, `"`, `\\"`, -1))
 	}
 

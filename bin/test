@@ -5,7 +5,7 @@ usage="Run all tests"
 # Setup
 #######
 set -euC
-root="$(cd "$(dirname "$0")/.." && pwd | sed s,/Teamwork/,/teamwork/,)"
+root="$(cd "$(dirname "$0")/.." && pwd)"
 . "$root/bin/start"
 
 # Run action
@@ -15,4 +15,8 @@ root="$(cd "$(dirname "$0")/.." && pwd | sed s,/Teamwork/,/teamwork/,)"
 # conditions. Uses a bit more memory, but we usually have enough of that.
 export GORACE="history_size=4"
 
-go test -race $test_tags $(go list ./... | grep -v /vendor/)
+$pre_test_func
+
+v_flag=""
+[ $verbose -ge 1 ] && v_flag="-v"
+go test $v_flag -race -tags="${test_tags# }" $(go list ./... | grep -v /vendor/)
