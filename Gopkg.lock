@@ -28,18 +28,43 @@
 [[projects]]
   branch = "master"
   name = "github.com/teamwork/test"
-  packages = [".","diff"]
+  packages = [
+    ".",
+    "diff"
+  ]
   revision = "fe7d3af7b99331ddae4f1a1271e652e7b5b3737f"
 
 [[projects]]
-  name = "gopkg.in/iconv.v1"
+  branch = "master"
+  name = "github.com/teamwork/toutf8"
   packages = ["."]
-  revision = "16a760eb7e186ae0e3aedda00d4a1daa4d0701d8"
-  version = "v1.1.1"
+  revision = "908c4b127591e39bd79a8214ca158a4f8baff682"
+
+[[projects]]
+  name = "golang.org/x/text"
+  packages = [
+    "encoding",
+    "encoding/charmap",
+    "encoding/ianaindex",
+    "encoding/internal",
+    "encoding/internal/identifier",
+    "encoding/japanese",
+    "encoding/korean",
+    "encoding/simplifiedchinese",
+    "encoding/traditionalchinese",
+    "encoding/unicode",
+    "internal/gen",
+    "internal/utf8internal",
+    "runes",
+    "transform",
+    "unicode/cldr"
+  ]
+  revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
+  version = "v0.3.0"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "026ae5aaf7092ecf5c3c36c0e044c3f069d7dea6f0d97c5b5dedc2fa3b642562"
+  inputs-digest = "f94729c5d72c9be71965bdae81cfe994ee004b932571f093d64fc770b3ae4d6b"
   solver-name = "gps-cdcl"
   solver-version = 1
