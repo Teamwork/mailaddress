@@ -30,5 +30,5 @@
   name = "github.com/teamwork/test"
 
 [[constraint]]
-  name = "gopkg.in/iconv.v1"
-  version = "1.1.1"
+  branch = "master"
+  name = "github.com/teamwork/toutf8"

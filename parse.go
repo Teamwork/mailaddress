@@ -7,6 +7,8 @@ import (
 	"strings"
 	"unicode"
 	"unicode/utf8"
+
+	"github.com/teamwork/toutf8"
 )
 
 var (
@@ -149,7 +151,7 @@ func end(a *Address) (goterror bool) {
 	// Remove any RFC 2047 encoding. Any encoded word is a single <atom>
 	// (i.e. characters such as comma, <, ", etc. don't get interpreted in
 	// their special meaning), so this is why we do this here.
-	decoder := mime.WordDecoder{CharsetReader: toUTF8}
+	decoder := mime.WordDecoder{CharsetReader: toutf8.Reader}
 	decoded, err := decoder.DecodeHeader(a.Name)
 	if err != nil {
 		a.Error = err
