@@ -85,7 +85,7 @@ func (l List) Slice() []string {
 func (l List) Errors() (errs error) {
 	for _, a := range l {
 		if !a.Valid() {
-			errs = multierror.Append(errs, a.Error)
+			errs = multierror.Append(errs, a.err)
 		}
 	}
 	return errs

@@ -11,7 +11,7 @@ type Address struct {
 	Name    string `db:"name" json:"name"`
 	Address string `db:"email" json:"address"`
 	Raw     string `db:"-" json:"-"`
-	Error   error  `db:"-" json:"-"`
+	err     error  `db:"-"`
 }
 
 // String formats an address. It is *not* RFC 2047 encoded!
@@ -114,9 +114,18 @@ func (a Address) WithoutTag() string {
 // (e.g. addr := Address{...}).
 func (a *Address) Valid() bool {
 	if a.Address == "" || !reValidEmail.MatchString(a.Address) {
-		a.Error = ErrNoEmail
+		a.err = ErrNoEmail
 		return false
 	}
 
-	return a.Error == nil
+	return a.err == nil
+}
+
+// Error returns any error that may have been associated with the mail address
+func (a *Address) Error() error {
+	if a.Valid() {
+		return nil
+	}
+
+	return a.err
 }
