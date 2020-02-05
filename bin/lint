@@ -76,7 +76,6 @@ gometalinter --deadline=120s --vendor --sort=path --tests --disable-all \
 	--enable=varcheck \
 	--enable=structcheck \
 	--enable=errcheck \
-	--enable=megacheck \
 	--enable=ineffassign \
 	--enable=interfacer \
 	--enable=unconvert \

@@ -72,24 +72,24 @@ func TestNewHelpers(t *testing.T) {
 		name, address string
 		expected      Address
 	}{
-		{"", "", Address{Name: "", Address: "", Error: errors.New("")}},
-		{"Martin", "", Address{Name: "Martin", Address: "", Error: errors.New("")}},
+		{"", "", Address{Name: "", Address: "", err: errors.New("")}},
+		{"Martin", "", Address{Name: "Martin", Address: "", err: errors.New("")}},
 		{"", "martin@example.com", Address{Name: "", Address: "martin@example.com"}},
 		{"Martin", "martin@example.com", Address{Name: "Martin", Address: "martin@example.com"}},
 
 		// Invalid addresses should result in an invalid Address{} (that is, one
 		// without the Address field set).
-		{"Martin", "invalid", Address{Name: "Martin", Address: "", Error: errors.New("")}},
+		{"Martin", "invalid", Address{Name: "Martin", Address: "", err: errors.New("")}},
 	}
 
 	for _, tc := range cases {
 		t.Run(fmt.Sprintf("%v <%v>", tc.name, tc.address), func(t *testing.T) {
 			got := New(tc.name, tc.address)
 
-			if tc.expected.Error != nil && got.Error == nil {
+			if tc.expected.Error() != nil && got.Error() == nil {
 				t.Fatal("expected error but got nil")
 			}
-			if tc.expected.Error == nil && got.Error != nil {
+			if tc.expected.Error() == nil && got.Error() != nil {
 				t.Fatal("expected no error but got error")
 			}
 

@@ -18,14 +18,14 @@ func Parse(str string) (Address, error) {
 		return Address{}, ErrTooManyEmails
 	}
 
-	return list[0], list[0].Error
+	return list[0], list[0].err
 }
 
 // New is a shortcut to make a new Address
 func New(name, address string) Address {
 	a, err := Parse(address)
 	if err != nil {
-		return Address{Name: name, Address: "", Error: err}
+		return Address{Name: name, Address: "", err: err}
 	}
 	return Address{Name: name, Address: a.Address}
 }

@@ -69,13 +69,13 @@ func parse(str string) (list List, haveError bool) {
 		switch {
 		case code == utf8.RuneError:
 			addr.Raw += chr
-			addr.Error = ErrInvalidEncoding
+			addr.err = ErrInvalidEncoding
 			haveError = true
 
 		// Don't allow unprintable characters.
 		case code < 0x09 || (code >= 0x0b && code < 0x20):
 			addr.Raw += chr
-			addr.Error = ErrInvalidCharacter
+			addr.err = ErrInvalidCharacter
 			haveError = true
 
 		case chr == `\`:
@@ -112,7 +112,7 @@ func parse(str string) (list List, haveError bool) {
 		// Next <address>
 		case !inQuote && chr == ",":
 			haveError = end(&addr) || haveError
-			if addr.Name != "" || addr.Address != "" || addr.Error != nil {
+			if addr.Name != "" || addr.Address != "" || addr.err != nil {
 				list = append(list, addr)
 			}
 			addr = Address{}
@@ -120,8 +120,8 @@ func parse(str string) (list List, haveError bool) {
 		// We've seen <angl-addr> but more data :-/
 		case !inQuote && !inAddress && addr.Address != "" && !unicode.IsSpace(code):
 			// Set error and read over it.
-			if addr.Error == nil {
-				addr.Error = ErrInvalidCharacter
+			if addr.err == nil {
+				addr.err = ErrInvalidCharacter
 				haveError = true
 			}
 
@@ -138,7 +138,7 @@ func parse(str string) (list List, haveError bool) {
 	}
 
 	haveError = end(&addr) || haveError
-	if addr.Name != "" || addr.Address != "" || addr.Error != nil {
+	if addr.Name != "" || addr.Address != "" || addr.err != nil {
 		list = append(list, addr)
 	}
 
@@ -154,7 +154,7 @@ func end(a *Address) (goterror bool) {
 	decoder := mime.WordDecoder{CharsetReader: toutf8.Reader}
 	decoded, err := decoder.DecodeHeader(a.Name)
 	if err != nil {
-		a.Error = err
+		a.err = err
 		a.Name = ""
 		return true
 	}
@@ -171,11 +171,11 @@ func end(a *Address) (goterror bool) {
 		if mail != "" {
 			a.Address = mail
 			if len(mail) != len(a.Name) {
-				a.Error = ErrInvalidCharacter
+				a.err = ErrInvalidCharacter
 				goterror = true
 			}
 		} else {
-			a.Error = ErrNoEmail
+			a.err = ErrNoEmail
 			goterror = true
 		}
 

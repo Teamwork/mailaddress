@@ -12,7 +12,6 @@ var validAddresses = map[string]Address{
 	"<angle-addr@example.net>":             {Name: "", Address: "angle-addr@example.net"},
 	"First Last <mailbox@example.net>":     {Name: "First Last", Address: "mailbox@example.net"},
 	`"First Last" <mailbox@example.net>`:   {Name: "First Last", Address: "mailbox@example.net"},
-	"Uni العَرَبِية Cøde <x@example.net>":  {Name: "Uni العَرَبِية Cøde", Address: "x@example.net"},
 	`"<Firšt; Låšt>" <x@example.net>`:      {Name: `<Firšt; Låšt>`, Address: `x@example.net`},
 	"dot.in.local.part@example.com":        {Address: "dot.in.local.part@example.com"},
 	"Name <dot.in.local.part@example.com>": {Name: "Name", Address: "dot.in.local.part@example.com"},
@@ -22,6 +21,8 @@ var validAddresses = map[string]Address{
 	"Name <dashed-dash@ex-ample.com>":      {Name: "Name", Address: "dashed-dash@ex-ample.com"},
 	"example@example.verylongtld":          {Address: "example@example.verylongtld"},
 	`Po "Wiśnasd" <asd@asd-def-24h.zxc>`:   {Name: `Po Wiśnasd`, Address: "asd@asd-def-24h.zxc"},
+
+	`Uni العَرَبِية Cøde <x@example.net>`: {Name: "Uni العَرَبِية Cøde", Address: "x@example.net"},
 
 	// TODO: Quoting the local part isn't supported (yet).
 	//`"quoted"@example.com`:                     {Address: `"quoted"@example.com`},
@@ -280,11 +281,11 @@ Tournoij
 			`=?utf-8?q?=E0=B8=B1=E0=B8=81=E0=B8=A9=ED=9B=88=EB=AF=BC?= <a@example.net>`: `` +
 			`"日本ки正體อักษ훈민" <a@example.net>`,
 
-		``:  ``,
-		`,`: ``,
-		`martin@example.com,`:                           `martin@example.com`,
-		`,martin@example.com`:                           `martin@example.com`,
-		`,martin@example.com,`:                          `martin@example.com`,
+		``:                     ``,
+		`,`:                    ``,
+		`martin@example.com,`:  `martin@example.com`,
+		`,martin@example.com`:  `martin@example.com`,
+		`,martin@example.com,`: `martin@example.com`,
 		`"martin@example.com FOO" <martin@example.com>`: `"martin@example.com FOO" <martin@example.com>`,
 	}
 
@@ -313,7 +314,7 @@ func TestInvalid(t *testing.T) {
 			if err == nil {
 				t.Fatal("err == nil")
 			}
-			if out.Error == nil {
+			if out.Error() == nil {
 				t.Fatal("out.Error == nil")
 			}
 		})
