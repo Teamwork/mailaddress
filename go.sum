@@ -1,0 +1,14 @@
+github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
+github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/hashicorp/errwrap v0.0.0-20141028054710-7554cd9344ce h1:prjrVgOk2Yg6w+PflHoszQNLTUh4kaByUcEWM/9uin4=
+github.com/hashicorp/errwrap v0.0.0-20141028054710-7554cd9344ce/go.mod h1:YH+1FKiLXxHSkmPseP+kNlulaMuP3n2brvKWEqk/Jc4=
+github.com/hashicorp/go-multierror v0.0.0-20170622060955-83588e72410a h1:RUacJnONqfKgDeok3I3IqMa8e5+B3qzBIbNK4dZK65k=
+github.com/hashicorp/go-multierror v0.0.0-20170622060955-83588e72410a/go.mod h1:JMRHfdO9jKNzS/+BTlxCjKNQHg/jZAft8U7LloJvN7I=
+github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
+github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
+github.com/teamwork/test v0.0.0-20170823213704-fe7d3af7b993 h1:Xj3TeGnKZEj4XR/g1us1vhVKBjTaHKE8oe2gD5M7qi0=
+github.com/teamwork/test v0.0.0-20170823213704-fe7d3af7b993/go.mod h1:TIbx7tx6WHBjQeLRM4eWQZBL7kmBZ7/KI4x4v7Y5YmA=
+github.com/teamwork/toutf8 v0.0.0-20180417010523-908c4b127591 h1:TzEYsThXaLGk7jOZ1RqgUXcU6CYKU+Nr4JOKbX7LAE8=
+github.com/teamwork/toutf8 v0.0.0-20180417010523-908c4b127591/go.mod h1:3yhreNgI5hJ7gjWarHhHu59m31qe5oSL82QaBk9MAV8=
+golang.org/x/text v0.3.0 h1:g61tztE5qeGQ89tm6NTjjM9VPIm088od1l6aSorWRWg=
+golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
