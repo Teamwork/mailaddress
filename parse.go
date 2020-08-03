@@ -110,7 +110,7 @@ func parse(str string) (list List, haveError bool) {
 			inAddress = false
 
 		// Next <address>
-		case !inQuote && chr == ",":
+		case !inQuote && (chr == "," || chr == ";"): // ';' introduced by outlook
 			haveError = end(&addr) || haveError
 			if addr.Name != "" || addr.Address != "" || addr.err != nil {
 				list = append(list, addr)

@@ -145,8 +145,6 @@ var invalidAddresses = []string{
 	`smellycats612@aol..com`,
 	`concretesawing@comcast.net13113602@dwsg`,
 	`MM522@aol.com315=269-5244`,
-	`;foo@example.com`,
-	`foo@example.com;`,
 	`"much.more unusual"@example.com`,
 
 	// quoted strings must be dot separated or the only element making up the
