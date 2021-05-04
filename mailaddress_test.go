@@ -21,6 +21,10 @@ func TestParseList(t *testing.T) {
 		{``, List{}, false},
 		{`asd`, List{Address{Raw: "asd"}}, true},
 		{"Martin <martin@example.com>", List{Address{Name: "Martin", Address: "martin@example.com"}}, false},
+		{"\"Martin, What\" <martin@example.com>, another@foo.com", List{
+			Address{Raw: "\"Martin, What\" <martin@example.com>", Name: "Martin, What", Address: "martin@example.com"},
+			Address{Raw: "another@foo.com", Address: "another@foo.com"},
+		}, false},
 	}
 
 	for _, tc := range cases {
