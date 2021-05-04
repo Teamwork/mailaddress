@@ -147,6 +147,7 @@ func parse(str string) (list List, haveError bool) {
 
 func end(a *Address) (goterror bool) {
 	a.Name = strings.TrimSpace(a.Name)
+	a.Raw = strings.TrimSpace(a.Raw)
 
 	// Remove any RFC 2047 encoding. Any encoded word is a single <atom>
 	// (i.e. characters such as comma, <, ", etc. don't get interpreted in
