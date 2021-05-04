@@ -46,6 +46,12 @@ var validAddresses = map[string]Address{
 	// You can stop and start quoting
 	`"Martin" foo "Tournoij" <martin@example.net>`: {Name: `Martin foo Tournoij`, Address: `martin@example.net`},
 	`"Martin"foo"Tournoij" <martin@example.net>`:   {Name: `MartinfooTournoij`, Address: `martin@example.net`},
+	`'Martin' foo 'Tournoij' <martin@example.net>`: {Name: `'Martin' foo 'Tournoij'`, Address: `martin@example.net`},
+	`'Martin foo Tournoij' <martin@example.net>`:   {Name: `Martin foo Tournoij`, Address: `martin@example.net`},
+
+	// do not support this yet
+	`'Martin foo's Tournoij' <martin@example.net>`:       {Name: `'Martin foo's Tournoij'`, Address: `martin@example.net`},
+	`'Martin foo's foo's Tournoij' <martin@example.net>`: {Name: `'Martin foo's foo's Tournoij'`, Address: `martin@example.net`},
 
 	// One-letter local-part, domain
 	"a@b.c":        {Address: "a@b.c"},

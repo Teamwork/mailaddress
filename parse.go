@@ -149,6 +149,11 @@ func end(a *Address) (goterror bool) {
 	a.Name = strings.TrimSpace(a.Name)
 	a.Raw = strings.TrimSpace(a.Raw)
 
+	// remove single quotes if they are only around the name
+	if len(a.Name) > 2 && !strings.Contains(a.Name[1:len(a.Name)-1], "'") {
+		a.Name = strings.Trim(a.Name, "'")
+	}
+
 	// Remove any RFC 2047 encoding. Any encoded word is a single <atom>
 	// (i.e. characters such as comma, <, ", etc. don't get interpreted in
 	// their special meaning), so this is why we do this here.
