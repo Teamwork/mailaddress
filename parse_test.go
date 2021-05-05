@@ -87,6 +87,10 @@ Tournoij
 	" Martin<martin@example.com> ":         {Name: "Martin", Address: "martin@example.com"},
 	"   Martin    <martin@example.com>   ": {Name: "Martin", Address: "martin@example.com"},
 
+	// nested addresses and different mailto and sender
+	"Martin, What <What.Martin@a.com <mailto:What.Martin@b.com>>": {Name: "Martin, What", Address: "What.Martin@b.com"},
+	"Martin, What <What.Martin@a.com<mailto:What.Martin@b.com>>":  {Name: "Martin, What", Address: "What.Martin@b.com"},
+
 	// RFC 2047. We don't need to extensibly test it since we use Go's package,
 	// and assume that works well.
 	`=?utf-8?q?=E6=97=A5=E6=9C=AC=D0=BA=D0=B8=E6=AD=A3=E9=AB=94=E0=B8=AD?=` +
@@ -285,11 +289,14 @@ Tournoij
 			`=?utf-8?q?=E0=B8=B1=E0=B8=81=E0=B8=A9=ED=9B=88=EB=AF=BC?= <a@example.net>`: `` +
 			`"日本ки正體อักษ훈민" <a@example.net>`,
 
-		``:                     ``,
-		`,`:                    ``,
-		`martin@example.com,`:  `martin@example.com`,
-		`,martin@example.com`:  `martin@example.com`,
-		`,martin@example.com,`: `martin@example.com`,
+		``:                           ``,
+		`,`:                          ``,
+		`martin@example.com,`:        `martin@example.com`,
+		`martin@example.com,,,,`:     `martin@example.com`,
+		`,martin@example.com`:        `martin@example.com`,
+		`,,,,martin@example.com`:     `martin@example.com`,
+		`,martin@example.com,`:       `martin@example.com`,
+		`,,,,martin@example.com,,,,`: `martin@example.com`,
 		`"martin@example.com FOO" <martin@example.com>`: `"martin@example.com FOO" <martin@example.com>`,
 	}
 

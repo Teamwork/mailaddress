@@ -13,6 +13,7 @@ import (
 
 var (
 	reSanitizeWhitespace = regexp.MustCompile(`\s+`)
+	reSanitizeCommas     = regexp.MustCompile(`^,*|,*$`)
 	reRemoveComment      = regexp.MustCompile(`\s+\(.*?\)$`)
 	reFindEmail          = regexp.MustCompile(`[^\s<>]+@[^\s<>]+\.[^\s<>]+`)
 
@@ -61,7 +62,7 @@ func parse(str string) (list List, haveError bool) {
 
 	list = List{}
 	addr := Address{}
-	inAddress := false
+	var addressDepth uint8
 	inQuote := false
 	for i, code := range str {
 		chr := string(code)
@@ -89,7 +90,7 @@ func parse(str string) (list List, haveError bool) {
 
 			// Escaped
 			if inQuote && i > 0 && str[i-1] == '\\' {
-				if inAddress {
+				if addressDepth > 0 {
 					addr.Address += chr
 				} else {
 					addr.Name += chr
@@ -102,15 +103,24 @@ func parse(str string) (list List, haveError bool) {
 		// Start <angl-addr>
 		case !inQuote && chr == "<":
 			addr.Raw += "<"
-			inAddress = true
+			addr.Address = ""
+			addressDepth++
 
 		// End <angl-addr>
 		case !inQuote && chr == ">":
 			addr.Raw += ">"
-			inAddress = false
+			addressDepth--
 
 		// Next <address>
 		case !inQuote && (chr == "," || chr == ";"): // ';' introduced by outlook
+
+			// unquoted name with comma
+			if chr == "," && addr.Address == "" && addr.Name != "" && !reFindEmail.MatchString(addr.Name) {
+				addr.Raw += chr
+				addr.Name += chr
+				continue
+			}
+
 			haveError = end(&addr) || haveError
 			if addr.Name != "" || addr.Address != "" || addr.err != nil {
 				list = append(list, addr)
@@ -118,7 +128,7 @@ func parse(str string) (list List, haveError bool) {
 			addr = Address{}
 
 		// We've seen <angl-addr> but more data :-/
-		case !inQuote && !inAddress && addr.Address != "" && !unicode.IsSpace(code):
+		case !inQuote && addressDepth == 0 && addr.Address != "" && !unicode.IsSpace(code):
 			// Set error and read over it.
 			if addr.err == nil {
 				addr.err = ErrInvalidCharacter
@@ -126,7 +136,7 @@ func parse(str string) (list List, haveError bool) {
 			}
 
 		// Append to address.
-		case inAddress:
+		case addressDepth > 0:
 			addr.Raw += chr
 			addr.Address += chr
 
@@ -148,11 +158,6 @@ func parse(str string) (list List, haveError bool) {
 func end(a *Address) (goterror bool) {
 	a.Name = strings.TrimSpace(a.Name)
 	a.Raw = strings.TrimSpace(a.Raw)
-
-	// remove single quotes if they are only around the name
-	if len(a.Name) > 2 && !strings.Contains(a.Name[1:len(a.Name)-1], "'") {
-		a.Name = strings.Trim(a.Name, "'")
-	}
 
 	// Remove any RFC 2047 encoding. Any encoded word is a single <atom>
 	// (i.e. characters such as comma, <, ", etc. don't get interpreted in
@@ -186,6 +191,14 @@ func end(a *Address) (goterror bool) {
 		}
 
 		a.Name = ""
+	}
+
+	a.Address = strings.TrimPrefix(a.Address, "mailto:")
+	a.Address = reSanitizeCommas.ReplaceAllString(a.Address, "")
+
+	// remove single quotes if they are only around the name
+	if len(a.Name) > 2 && !strings.Contains(a.Name[1:len(a.Name)-1], "'") {
+		a.Name = strings.Trim(a.Name, "'")
 	}
 
 	// Includes some sanity checks; it sets Error.

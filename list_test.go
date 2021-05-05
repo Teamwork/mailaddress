@@ -209,10 +209,9 @@ func TestErrors(t *testing.T) {
 		{
 			func() (List, bool) { return ParseList("@example.com, invalid") },
 			true,
-			"2 errors occurred:",
+			"1 error occurred:",
 			&multierror.Error{
 				Errors: []error{
-					errors.New("unable to find an email address"),
 					errors.New("unable to find an email address"),
 				},
 			},
