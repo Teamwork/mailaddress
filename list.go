@@ -57,14 +57,20 @@ func (l *List) UnmarshalJSON(data []byte) error {
 // uniq returns only the unique addresses from a list.  Order is preserved
 func (l List) uniq() List {
 	a := List{}
-	m := map[string]bool{}
 	for _, addr := range l {
-		if _, ok := m[addr.Address]; ok {
+		found := false
+		for _, add := range a {
+			if strings.EqualFold(add.Address, addr.Address) {
+				found = true
+				break
+			}
+		}
+
+		if found {
 			continue
 		}
 
 		a = append(a, addr)
-		m[addr.Address] = true
 	}
 
 	return a
