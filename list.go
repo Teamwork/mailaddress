@@ -15,7 +15,7 @@ type List []Address
 // String formats all addresses. It is *not* RFC 2047 encoded!
 func (l List) String() string {
 	var out []string
-	for _, a := range l.uniq() {
+	for _, a := range l {
 		out = append(out, a.String())
 	}
 	return strings.Join(out, ", ")
@@ -32,7 +32,7 @@ func (l *List) UnmarshalJSON(data []byte) error {
 	var alias Alias
 	err := json.Unmarshal(data, &alias)
 	if err == nil {
-		*l = List(alias)
+		*l = List(alias).uniq()
 		return nil
 	}
 
@@ -47,10 +47,11 @@ func (l *List) UnmarshalJSON(data []byte) error {
 		}
 
 		*l, _ = ParseList(str)
+		*l = l.uniq()
 		return nil
 	}
 
-	*l = FromSlice(slice)
+	*l = FromSlice(slice).uniq()
 	return nil
 }
 
@@ -79,23 +80,35 @@ func (l List) uniq() List {
 // StringEncoded makes a string that *is* RFC 2047 encoded.  Duplicates are ignored.
 func (l List) StringEncoded() string {
 	var out []string
-	for _, a := range l.uniq() {
+	for _, a := range l {
 		val := a.StringEncoded()
 		out = append(out, val)
 	}
 	return strings.Join(out, ", ")
 }
 
-// Append adds a new Address to the list.
+// Append adds a new Address to the list.  If the address already exists in the
+// list or is invalid this will be a noop.
 func (l *List) Append(name, address string) {
-	*l = append(*l, New(name, address))
+	e := New(name, address)
+	if !e.Valid() {
+		return
+	}
+
+	for _, addr := range *l {
+		if strings.EqualFold(addr.Address, address) {
+			return
+		}
+	}
+
+	*l = append(*l, e)
 }
 
 // Slice gets all valid addresses in a []string slice. The names are lost and
 // invalid addresses are skipped.  Duplicates are ignored.
 func (l List) Slice() []string {
 	mails := []string{}
-	for _, e := range l.uniq() {
+	for _, e := range l {
 		if e.Valid() {
 			mails = append(mails, e.Address)
 		}
@@ -117,7 +130,7 @@ func (l List) Errors() (errs error) {
 // ValidAddresses returns a copy of the list which only includes valid email
 // addresses.
 func (l List) ValidAddresses() (valid List) {
-	for _, addr := range l.uniq() {
+	for _, addr := range l {
 		if addr.Valid() {
 			valid = append(valid, addr)
 		}
