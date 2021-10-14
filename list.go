@@ -88,15 +88,12 @@ func (l List) StringEncoded() string {
 }
 
 // Append adds a new Address to the list.  If the address already exists in the
-// list or is invalid this will be a noop.
+// list this will be a noop.
 func (l *List) Append(name, address string) {
 	e := New(name, address)
-	if !e.Valid() {
-		return
-	}
 
 	for _, addr := range *l {
-		if strings.EqualFold(addr.Address, address) {
+		if strings.EqualFold(addr.Address, e.Address) {
 			return
 		}
 	}
