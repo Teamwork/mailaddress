@@ -15,7 +15,7 @@ type List []Address
 // String formats all addresses. It is *not* RFC 2047 encoded!
 func (l List) String() string {
 	var out []string
-	for _, a := range l {
+	for _, a := range l.uniq() {
 		out = append(out, a.String())
 	}
 	return strings.Join(out, ", ")
@@ -54,11 +54,28 @@ func (l *List) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// StringEncoded makes a string that *is* RFC 2047 encoded.
+// uniq returns only the unique addresses from a list.  Order is preserved
+func (l List) uniq() List {
+	a := List{}
+	m := map[string]bool{}
+	for _, addr := range l {
+		if _, ok := m[addr.Address]; ok {
+			continue
+		}
+
+		a = append(a, addr)
+		m[addr.Address] = true
+	}
+
+	return a
+}
+
+// StringEncoded makes a string that *is* RFC 2047 encoded.  Duplicates are ignored.
 func (l List) StringEncoded() string {
 	var out []string
-	for _, a := range l {
-		out = append(out, a.StringEncoded())
+	for _, a := range l.uniq() {
+		val := a.StringEncoded()
+		out = append(out, val)
 	}
 	return strings.Join(out, ", ")
 }
@@ -69,12 +86,12 @@ func (l *List) Append(name, address string) {
 }
 
 // Slice gets all valid addresses in a []string slice. The names are lost and
-// invalid addresses are skipped.
+// invalid addresses are skipped.  Duplicates are ignored.
 func (l List) Slice() []string {
 	mails := []string{}
-	for _, m := range l {
-		if m.Valid() {
-			mails = append(mails, m.Address)
+	for _, e := range l.uniq() {
+		if e.Valid() {
+			mails = append(mails, e.Address)
 		}
 	}
 	return mails
@@ -94,7 +111,7 @@ func (l List) Errors() (errs error) {
 // ValidAddresses returns a copy of the list which only includes valid email
 // addresses.
 func (l List) ValidAddresses() (valid List) {
-	for _, addr := range l {
+	for _, addr := range l.uniq() {
 		if addr.Valid() {
 			valid = append(valid, addr)
 		}
