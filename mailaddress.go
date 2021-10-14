@@ -2,7 +2,12 @@ package mailaddress
 
 // ParseList will parse one or more addresses.
 func ParseList(str string) (l List, haveError bool) {
-	return parse(str)
+	l, haveError = parse(str)
+	if haveError {
+		return l, haveError
+	}
+
+	return l.uniq(), false
 }
 
 // Parse will parse exactly one address. More than one addresses is an error,
