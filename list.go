@@ -32,7 +32,7 @@ func (l *List) UnmarshalJSON(data []byte) error {
 	var alias Alias
 	err := json.Unmarshal(data, &alias)
 	if err == nil {
-		*l = List(alias)
+		*l = List(alias).uniq()
 		return nil
 	}
 
@@ -47,34 +47,67 @@ func (l *List) UnmarshalJSON(data []byte) error {
 		}
 
 		*l, _ = ParseList(str)
+		*l = l.uniq()
 		return nil
 	}
 
-	*l = FromSlice(slice)
+	*l = FromSlice(slice).uniq()
 	return nil
 }
 
-// StringEncoded makes a string that *is* RFC 2047 encoded.
+// uniq returns only the unique addresses from a list.  Order is preserved
+func (l List) uniq() List {
+	a := List{}
+	for _, addr := range l {
+		found := false
+		for _, add := range a {
+			if strings.EqualFold(add.Address, addr.Address) {
+				found = true
+				break
+			}
+		}
+
+		if found {
+			continue
+		}
+
+		a = append(a, addr)
+	}
+
+	return a
+}
+
+// StringEncoded makes a string that *is* RFC 2047 encoded.  Duplicates are ignored.
 func (l List) StringEncoded() string {
 	var out []string
 	for _, a := range l {
-		out = append(out, a.StringEncoded())
+		val := a.StringEncoded()
+		out = append(out, val)
 	}
 	return strings.Join(out, ", ")
 }
 
-// Append adds a new Address to the list.
+// Append adds a new Address to the list.  If the address already exists in the
+// list this will be a noop.
 func (l *List) Append(name, address string) {
-	*l = append(*l, New(name, address))
+	e := New(name, address)
+
+	for _, addr := range *l {
+		if strings.EqualFold(addr.Address, e.Address) {
+			return
+		}
+	}
+
+	*l = append(*l, e)
 }
 
 // Slice gets all valid addresses in a []string slice. The names are lost and
-// invalid addresses are skipped.
+// invalid addresses are skipped.  Duplicates are ignored.
 func (l List) Slice() []string {
 	mails := []string{}
-	for _, m := range l {
-		if m.Valid() {
-			mails = append(mails, m.Address)
+	for _, e := range l {
+		if e.Valid() {
+			mails = append(mails, e.Address)
 		}
 	}
 	return mails

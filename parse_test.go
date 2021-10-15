@@ -221,7 +221,7 @@ func TestParseListAddress(t *testing.T) {
 			newTest += ", " + pick
 			newExpected = append(newExpected, validAddresses[pick])
 		}
-		mixed[newTest] = newExpected
+		mixed[newTest] = List(newExpected).uniq()
 	}
 
 	for test, expected := range mixed {
