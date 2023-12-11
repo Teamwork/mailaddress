@@ -310,7 +310,7 @@ Tournoij
 
 func TestInvalid(t *testing.T) {
 	for i, test := range invalidAddresses {
-		t.Run(fmt.Sprintf("%v", i), func(t *testing.T) {
+		t.Run(fmt.Sprintf("%d_%s", i, test), func(t *testing.T) {
 			out, err := Parse(test)
 			if out.Valid() {
 				t.Fatal("out.Valid() said it was valid.")
