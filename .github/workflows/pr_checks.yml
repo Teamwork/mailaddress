@@ -1,0 +1,74 @@
+name: Checks
+
+on:
+  pull_request:
+
+env:
+  GOPRIVATE: github.com/teamwork/*
+  GOFLAGS: -mod=readonly
+  LANG: en_US.UTF-8
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: "1.21"
+
+      - name: Setup git
+        run: git config --global url."https://$GH_TOKEN@github.com/".insteadOf "https://github.com/"
+
+      - name: Lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          only-new-issues: true
+          args: "--out-${NO_FUTURE}format colored-line-number"
+
+  test:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GH_ADMIN_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: "1.21"
+
+      - name: Setup git
+        run: git config --global url."https://$GH_TOKEN@github.com/".insteadOf "https://github.com/"
+
+      - name: Test
+        run: |
+          go mod tidy
+          go test -coverprofile=full.coverage -race -count=1 ./...
+
+      - name: Generate diff
+        run: |
+          git diff origin/${{ github.base_ref }}...origin/${{ github.head_ref }} > pr.diff
+
+      - name: Compute new code coverage
+        id: covdiffaction
+        uses: panagiotisptr/cov-diff@v1.2
+        with:
+          path: .
+          coverprofile: full.coverage
+          diff: pr.diff
+          module: github.com/teamwork/mailaddress
+
+      - name: Comment
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            Coverage on new code: ${{ steps.covdiffaction.outputs.covdiff }}%

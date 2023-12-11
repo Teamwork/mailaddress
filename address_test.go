@@ -55,6 +55,7 @@ func TestStringEncoded(t *testing.T) {
 		{`martin@example.net`, `martin@example.net`},
 		{`Martin Tournoij <martin@example.net>`, `Martin Tournoij <martin@example.net>`},
 		{`"Martin Tournoij" <martin@example.net>`, `Martin Tournoij <martin@example.net>`},
+		{`Martin Tour<noij> <martin.t@example.com>`, `Martin Tour noij <martin.t@example.com>`},
 		{
 			`a العَرَبِي b <a@example.net>`,
 			`=?utf-8?q?a_=D8=A7=D9=84=D8=B9=D9=8E=D8=B1=D9=8E=D8=A8=D9=90=D9=8A_b?= <a@example.net>`,

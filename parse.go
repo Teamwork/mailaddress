@@ -107,6 +107,13 @@ func parse(str string) (list List, haveError bool) {
 		// End <angl-addr>
 		case !inQuote && chr == ">":
 			addr.Raw += ">"
+			// we've observed name including `<>`
+			if i < len(str)-1 && !addr.Valid() {
+				addr.Name += " " + addr.Address
+				addr.Address = ""
+				addr.err = nil // valid is not idempoent
+			}
+
 			inAddress = false
 
 		// Next <address>
