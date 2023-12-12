@@ -113,6 +113,7 @@ func (a Address) WithoutTag() string {
 // It is also useful if the address wasn't created with ParseList() but directly
 // (e.g. addr := Address{...}).
 func (a *Address) Valid() bool {
+	fmt.Printf("===Valid %#v %t\n", a, reValidEmail.MatchString(a.Address))
 	if a.Address == "" || !reValidEmail.MatchString(a.Address) {
 		a.err = ErrNoEmail
 		return false

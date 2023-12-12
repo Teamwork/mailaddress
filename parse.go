@@ -117,7 +117,7 @@ func parse(str string) (list List, haveError bool) {
 			inAddress = false
 
 		// Next <address>
-		case !inQuote && (chr == "," || chr == ";"): // ';' introduced by outlook
+		case !inQuote && (chr == "," || chr == ";" || inAddress && unicode.IsSpace(code)): // ';' introduced by outlook
 			haveError = end(&addr) || haveError
 			if addr.Name != "" || addr.Address != "" || addr.err != nil {
 				list = append(list, addr)

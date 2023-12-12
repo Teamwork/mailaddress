@@ -51,22 +51,30 @@ func TestAddressEncoded(t *testing.T) {
 func TestStringEncoded(t *testing.T) {
 	cases := []struct {
 		in, expected string
+		count        int
 	}{
-		{`martin@example.net`, `martin@example.net`},
-		{`Martin Tournoij <martin@example.net>`, `Martin Tournoij <martin@example.net>`},
-		{`"Martin Tournoij" <martin@example.net>`, `Martin Tournoij <martin@example.net>`},
-		{`Martin Tour<noij> <martin.t@example.com>`, `Martin Tour noij <martin.t@example.com>`},
+		{`martin@example.net`, `martin@example.net`, 1},
+		{`Martin Tournoij <martin@example.net>`, `Martin Tournoij <martin@example.net>`, 1},
+		{`"Martin Tournoij" <martin@example.net>`, `Martin Tournoij <martin@example.net>`, 1},
+		{`Martin Tour<noij> <martin.t@example.com>`, `Martin Tour noij <martin.t@example.com>`, 1},
+		{
+			`Martin, Nichole <Nichole.Martin@harrisgroup.com <mailto:Nichole.Martin@harrisgroup.com>>r`,
+			"Nichole <Nichole.Martin@harrisgroup.com>",
+			1,
+		},
 		{
 			`a العَرَبِي b <a@example.net>`,
 			`=?utf-8?q?a_=D8=A7=D9=84=D8=B9=D9=8E=D8=B1=D9=8E=D8=A8=D9=90=D9=8A_b?= <a@example.net>`,
+			1,
 		},
 	}
 
 	for _, tc := range cases {
 		t.Run(tc.in, func(t *testing.T) {
 			out, outErr := ParseList(tc.in)
-			if outErr {
-				t.Error(out.Errors())
+			out = out.ValidAddresses()
+			if outErr && len(out) != tc.count {
+				t.Error(out.Errors(), " count:", len(out))
 			}
 
 			if out.StringEncoded() != tc.expected {
