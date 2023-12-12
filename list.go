@@ -32,7 +32,7 @@ func (l *List) UnmarshalJSON(data []byte) error {
 	var alias Alias
 	err := json.Unmarshal(data, &alias)
 	if err == nil {
-		*l = List(alias).uniq()
+		*l = List(alias)
 		return nil
 	}
 
