@@ -17,6 +17,7 @@ func TestNameEncoded(t *testing.T) {
 		{"m€rtin", "=?utf-8?q?m=E2=82=ACrtin?="},
 		{"martin, tournoij", `"martin, tournoij"`},
 		{"m@rtin", `"m@rtin"`},
+		{"mc: money", `"mc: money"`},
 	}
 
 	for _, tc := range cases {
