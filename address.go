@@ -19,7 +19,7 @@ func (a Address) String() string {
 	if a.Name == "" {
 		return a.Address
 	}
-	return fmt.Sprintf(`"%s" <%s>`, strings.Replace(a.Name, `"`, `\"`, -1), a.Address)
+	return fmt.Sprintf(`"%s" <%s>`, strings.ReplaceAll(a.Name, `"`, `\"`), a.Address)
 }
 
 // NameEncoded returns the name ready to be put in an email header. Special
@@ -31,8 +31,8 @@ func (a Address) NameEncoded() string {
 	}
 
 	name := a.Name
-	if strings.ContainsAny(name, `",;@<>()`) {
-		name = fmt.Sprintf(`"%s"`, strings.Replace(name, `"`, `\\"`, -1))
+	if strings.ContainsAny(name, `:",;@<>()`) {
+		name = fmt.Sprintf(`"%s"`, strings.ReplaceAll(name, `"`, `\\"`))
 	}
 
 	return mime.QEncoding.Encode("utf-8", name)
